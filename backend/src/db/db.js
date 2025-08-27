@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 
+const mongodb_url = process.env.DATABASE_URL;
+
 function ConnectDB(){
-    mongoose.connect("mongodb+srv://br163406:XnBuawrKEpYjPAX1@cluster0.vwqrkil.mongodb.net/moodplayer").then(() => {
+    mongoose.connect(mongodb_url).then(() => {
         console.log("db is connected");
     })
 }
