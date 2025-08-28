@@ -2,14 +2,26 @@ const express = require("express");
 const multer = require("multer");
 
 const router = express.Router();
-const upload = multer({Storage:multer.memoryStorage()});
+const upload = multer({ storage: multer.memoryStorage() });
+const uploadFile = require("../service/storage.service");
 
-// API is created;
-router.post("/songs",(req, res) => {
+router.post("/songs", upload.single("audio"), async (req, res) => {
+  try {
     console.log(req.body);
+
+    const fileData = await uploadFile(req.file);
+    console.log(fileData)
+
     res.json({
-        message: "song post completed"
-    })
-})
+      message: "post sucessful",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "something went wrong",
+      error: error.message,
+    });
+  }
+});
 
 module.exports = router;

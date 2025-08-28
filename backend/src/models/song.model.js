@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const songSchema = new mongoose.Schema({
     title:String,
-    songUrl:String
+    artist:String,
+    audio:File
 })
 
 const songModel = mongoose.model("song", songSchema);
