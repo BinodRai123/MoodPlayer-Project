@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import * as faceapi from "face-api.js";
+import axios from "axios";
 
-export default function FaceRecognition() {
+export default function FaceRecognition({setSongs}) {
   const videoRef = useRef();
-  const [pending, setPending] = useState(false);
 
   useEffect(() => {
     async function loadModels() {
@@ -23,10 +23,7 @@ export default function FaceRecognition() {
   }, []);
 
   const detectMood = async () => {
-    if (pending) return; // prevent duplicate scans
-    setPending(true);
-
-    try {
+    
       const detections = await faceapi
         .detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions())
         .withFaceExpressions();
@@ -44,16 +41,12 @@ export default function FaceRecognition() {
             Maxmood = key;
           }
         }
-
-        console.log("highest mood -->", highestExpression, "mood -->", Maxmood);
+        
+        const {data} = await axios.get(`http://localhost:3000/songs?mood=${Maxmood}`);
+        setSongs(data.songs)
+        console.log(Maxmood)
       }
-    } catch (error) {
-      setTimeout(() => {
-        detectMood();
-      }, 500);
-    } finally {
-      setPending(false); // always reset after detection (success or error)
-    }
+    
   };
 
   return (
@@ -62,10 +55,9 @@ export default function FaceRecognition() {
     
       <button
         onClick={detectMood}
-        disabled={pending}
         className="mt-5 text-white rounded text-2xl px-4 py-2 bg-gray-600 active:scale-95"
       >
-        {pending ? "Scanning Your Face..." : "Scan Expression"}
+      Scan Expression
       </button>
     </div>
   );

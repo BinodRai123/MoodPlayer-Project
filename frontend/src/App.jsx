@@ -1,10 +1,13 @@
-import React from 'react'
 import FaceRecognition from './faceRecognition'
+import AudioPlayer from './components/audioPlayer'
+import { useState } from 'react'
 
 const App = () => {
+  const [songs, setSongs] = useState([])
   return (
     <div>
-      <FaceRecognition />
+      <FaceRecognition setSongs={setSongs} />
+      <AudioPlayer songs={songs} />
     </div>
   )
 }
